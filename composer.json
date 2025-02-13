@@ -1,0 +1,14 @@
+{
+    "name": "x571084/backend",
+    "autoload": {
+        "psr-4": {
+            "app\\": "app"
+        }
+    },
+    "authors": [
+        {
+            "name": "joao"
+        }
+    ],
+    "require": {}
+}
