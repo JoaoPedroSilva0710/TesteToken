@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <form action="" name="form" id="form">
+
+        <input type="text" id="email" name="email" placeholder="email" value="joao">
+
+        <input type="password" id="password" name="password" placeholder="senha" value="123">
+
+        <button type="submit">Login</button>
+
+    </form>
+
+    <div>
+
+        <button id="btn_check_auth">Verificar autenticação</button>
+
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <script>
+        const form = document.querySelector("#form");
+
+        const btn_check_auth = document.querySelector("#btn_check_auth");
+
+        axios.defaults.baseURL = 'http://localhost:3000';
+
+        form.addEventListener('submit', async(e) => {
+            e.preventDefault();
+
+            try {
+                const formData = new FormData(e.target);
+
+                const {data} = await axios.post('login.php', formData);
+
+                sessionStorage.setItem('session', data);
+
+
+
+            } catch (error) {
+                console.log(error);
+            }
+        })
+        btn_check_auth.addEventListener('click', async (e) => {
+            
+            try {
+            
+                const authSession = 'Bearer ' + sessionStorage.getItem('session');
+
+                const {data} = await axios.get('auth.php', {
+                    headers: {
+
+                        "Authorization": authSession
+                    }
+
+                });
+
+               
+
+                console.log(data);
+
+                alert('logado');
+                
+            } catch (error) {
+                const errors = await error.response?.data;
+                
+                if(undefined === errors || 'EXPIRED' === errors){
+                    alert('Sessão expirou');
+                }
+                
+                console.log(error);
+            }
+
+            
+            
+        })
+
+
+    </script>
+</body>
+</html>
